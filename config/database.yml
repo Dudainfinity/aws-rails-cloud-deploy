@@ -1,0 +1,106 @@
+# PostgreSQL. Versões 9.5 e superiores são suportadas.
+#
+# Instale o driver pg:
+#   gem install pg
+# No macOS com Homebrew:
+#   gem install pg -- --with-pg-config=/opt/homebrew/bin/pg_config
+# No Windows:
+#   gem install pg
+#       Escolha a versão win32.
+#       Instale o PostgreSQL e adicione seu diretório /bin ao PATH.
+#
+# Configurar via Gemfile
+# gem "pg"
+#
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  # Para detalhes sobre pool de conexões, veja o guia de configuração do Rails
+  # https://guides.rubyonrails.org/configuring.html#database-pooling
+  max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+
+development:
+  <<: *default
+  database: aws_rails_cloud_deploy_development
+
+  # O role do banco de dados usado para conectar ao PostgreSQL.
+  # Para criar roles adicionais no PostgreSQL, veja `$ createuser --help`.
+  # Quando em branco, o PostgreSQL usará o role padrão, que é
+  # o mesmo nome do usuário do sistema operacional que roda o Rails.
+  #username: aws_rails_cloud_deploy
+
+  # A senha associada ao role do PostgreSQL (username).
+  #password:
+
+  # Conectar via socket TCP. Omitido por padrão pois o cliente usa
+  # um socket de domínio que não precisa de configuração. O Windows não tem
+  # sockets de domínio, então descomente estas linhas.
+  #host: localhost
+
+  # A porta TCP que o servidor escuta. Padrão é 5432.
+  # Se o servidor rodar em uma porta diferente, altere aqui.
+  #port: 5432
+
+  # Caminho de busca do schema. O servidor usa $user,public por padrão.
+  #schema_search_path: myapp,sharedapp,public
+
+  # Níveis mínimos de log, em ordem crescente:
+  #   debug5, debug4, debug3, debug2, debug1,
+  #   log, notice, warning, error, fatal, e panic
+  # Padrão é warning.
+  #min_messages: notice
+
+# Atenção: o banco definido como "test" será apagado e
+# recriado a partir do banco de desenvolvimento ao rodar "rake".
+# Não defina este banco igual ao de desenvolvimento ou produção.
+test:
+  <<: *default
+  database: aws_rails_cloud_deploy_test
+
+# Assim como em config/credentials.yml, nunca armazene informações sensíveis,
+# como senha do banco de dados, no código-fonte. Se alguém tiver acesso
+# ao seu código-fonte, terá acesso ao banco de dados.
+#
+# Em vez disso, forneça a senha ou URL completa de conexão como variável
+# de ambiente ao iniciar a aplicação. Por exemplo:
+#
+#   DATABASE_URL="postgres://myuser:mypass@localhost/somedatabase"
+#
+# Se a URL de conexão for fornecida na variável especial DATABASE_URL,
+# o Rails mesclará automaticamente sua configuração sobre os valores deste arquivo.
+# Alternativamente, você pode especificar uma variável de URL de conexão explicitamente:
+#
+#   production:
+#     url: <%= ENV["MY_APP_DATABASE_URL"] %>
+#
+# URLs de conexão para bancos não-primários também podem ser configuradas
+# via variáveis de ambiente. O nome da variável é formado concatenando o
+# nome da conexão com `_DATABASE_URL`. Por exemplo:
+#
+#   CACHE_DATABASE_URL="postgres://cacheuser:cachepass@localhost/cachedatabase"
+#
+# Leia https://guides.rubyonrails.org/configuring.html#configuring-a-database
+# para uma visão completa de como a configuração de conexão com banco pode ser especificada.
+#
+production:
+  primary: &primary_production
+    adapter: postgresql
+    encoding: unicode
+    database: <%= ENV.fetch("DATABASE_NAME", "aws_rails_cloud_deploy_production") %>
+    username: <%= ENV.fetch("DATABASE_USERNAME", "rails_user") %>
+    password: <%= ENV.fetch("DATABASE_PASSWORD", "rails_password") %>
+    host: <%= ENV.fetch("DATABASE_HOST", "db") %>
+    pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
+  cache:
+    <<: *primary_production
+    database: <%= ENV.fetch("DATABASE_NAME", "aws_rails_cloud_deploy_production") %>_cache
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *primary_production
+    database: <%= ENV.fetch("DATABASE_NAME", "aws_rails_cloud_deploy_production") %>_queue
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *primary_production
+    database: <%= ENV.fetch("DATABASE_NAME", "aws_rails_cloud_deploy_production") %>_cable
+    migrations_paths: db/cable_migrate

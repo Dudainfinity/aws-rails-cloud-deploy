@@ -1,0 +1,22 @@
+[Unit]
+Description=AWS Rails Cloud Deploy - Aplicação Ruby on Rails
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/var/www/aws-rails-cloud-deploy
+Environment=RAILS_ENV=production
+Environment=DATABASE_USERNAME=rails_user
+Environment=DATABASE_PASSWORD=rails_password
+Environment=SECRET_KEY_BASE=COLE_AQUI_O_SECRET_KEY_BASE_GERADO
+
+ExecStart=/home/ubuntu/.rbenv/shims/bundle exec rails server -b 127.0.0.1 -p 3000
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=aws-rails
+
+[Install]
+WantedBy=multi-user.target
