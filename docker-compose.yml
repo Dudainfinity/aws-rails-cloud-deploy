@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:16
+    container_name: aws_rails_db
+    restart: always
+    environment:
+      POSTGRES_USER: rails_user
+      POSTGRES_PASSWORD: rails_password
+      POSTGRES_DB: aws_rails_cloud_deploy_production
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - rails_network
+
+  web:
+    build: .
+    container_name: aws_rails_web
+    restart: always
+    depends_on:
+      - db
+    environment:
+      RAILS_ENV: production
+      RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
+      DATABASE_HOST: db
+      DATABASE_USERNAME: rails_user
+      DATABASE_PASSWORD: rails_password
+      DATABASE_NAME: aws_rails_cloud_deploy_production
+    ports:
+      - "8080:80"
+    networks:
+      - rails_network
+
+volumes:
+  postgres_data:
+
+networks:
+  rails_network:

@@ -1,0 +1,15 @@
+# Exemplo de configuração do config/database.yml para production
+# Cole apenas o bloco "production:" no seu arquivo real
+
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+production:
+  <<: *default
+  database: aws_rails_cloud_deploy_production
+  username: <%= ENV['DATABASE_USERNAME'] %>
+  password: <%= ENV['DATABASE_PASSWORD'] %>
+  host: localhost
+  port: 5432
