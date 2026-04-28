@@ -2,7 +2,7 @@
 
 # Prepara todos os bancos (primary, cache, queue, cable)
 ./bin/rails db:prepare
-./bin/rails db:prepare:cache db:prepare:queue db:prepare:cable 2>/dev/null || true
+./bin/rails db:create:cache db:migrate:cache db:create:queue db:migrate:queue db:create:cable db:migrate:cable 2>/dev/null || true
 
 # Inicia o Puma em background na porta 3000
 ./bin/rails server -b 127.0.0.1 -p 3000 &
