@@ -25,10 +25,10 @@ Rails.application.configure do
   config.active_storage.service = :local
 
   # Assume que todo acesso à aplicação passa por um reverse proxy que encerra SSL.
-  # config.assume_ssl = true
+  config.assume_ssl = true
 
   # Força todo acesso à aplicação via SSL, usa Strict-Transport-Security e cookies seguros.
-  # config.force_ssl = true
+  config.force_ssl = true
 
   # Ignora redirecionamento de http para https no endpoint de health check padrão.
   # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
