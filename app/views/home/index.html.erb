@@ -1,25 +1,137 @@
-<div style="font-family: sans-serif; max-width: 800px; margin: 60px auto; text-align: center;">
+<!-- HERO -->
+<section class="hero">
+  <span class="hero-badge">&#9679; Live em produção</span>
   <h1>AWS Rails Cloud Deploy</h1>
-  <p style="font-size: 1.2em; color: #555;">Deploy manual de Ruby on Rails na AWS EC2</p>
+  <p>Aplicação Ruby on Rails rodando na AWS EC2 com Docker, Nginx e PostgreSQL</p>
+  <div class="hero-buttons">
+    <a href="#stack" class="btn btn-primary">Ver Stack</a>
+    <a href="https://github.com/Dudainfinity/aws-rails-cloud-deploy" target="_blank" class="btn btn-outline">GitHub</a>
+  </div>
+</section>
 
-  <div style="margin-top: 40px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-    <div style="background: #f4f4f4; border-radius: 8px; padding: 20px; width: 180px;">
+<hr class="divider">
+
+<!-- STACK -->
+<section class="section" id="stack">
+  <h2 class="section-title">Stack de Tecnologias</h2>
+  <p class="section-subtitle">Ferramentas utilizadas nesse projeto</p>
+  <div class="cards-grid">
+    <div class="card">
+      <div class="card-icon">&#128142;</div>
       <h3>Ruby on Rails</h3>
-      <p>Framework web</p>
+      <p>Framework web full-stack para desenvolvimento rápido e produtivo</p>
+      <span class="card-version">Rails <%= @rails_version %> / Ruby <%= @ruby_version %></span>
     </div>
-    <div style="background: #f4f4f4; border-radius: 8px; padding: 20px; width: 180px;">
+    <div class="card">
+      <div class="card-icon">&#128024;</div>
+      <h3>Docker</h3>
+      <p>Containerização da aplicação com Dockerfile multi-stage otimizado</p>
+      <span class="card-version">docker compose</span>
+    </div>
+    <div class="card">
+      <div class="card-icon">&#128190;</div>
       <h3>PostgreSQL</h3>
-      <p>Banco de dados</p>
+      <p>Banco de dados relacional robusto e escalável</p>
+      <span class="card-version">postgres:16</span>
     </div>
-    <div style="background: #f4f4f4; border-radius: 8px; padding: 20px; width: 180px;">
+    <div class="card">
+      <div class="card-icon">&#9881;</div>
       <h3>Nginx</h3>
-      <p>Reverse proxy</p>
+      <p>Reverse proxy de alta performance servindo os assets e o Puma</p>
+      <span class="card-version">reverse proxy</span>
     </div>
-    <div style="background: #f4f4f4; border-radius: 8px; padding: 20px; width: 180px;">
+    <div class="card">
+      <div class="card-icon">&#9729;</div>
       <h3>AWS EC2</h3>
-      <p>Servidor cloud</p>
+      <p>Instância cloud na AWS para hospedar toda a infraestrutura</p>
+      <span class="card-version">Ubuntu 22.04</span>
+    </div>
+    <div class="card">
+      <div class="card-icon">&#128296;</div>
+      <h3>GitHub Actions</h3>
+      <p>CI/CD automatizado com deploy contínuo a cada push na main</p>
+      <span class="card-version">CI/CD</span>
     </div>
   </div>
+</section>
 
-  <p style="margin-top: 40px; color: #888;">Ambiente: <%= Rails.env %></p>
-</div>
+<hr class="divider">
+
+<!-- STATUS -->
+<section class="section" id="status">
+  <h2 class="section-title">Status do Servidor</h2>
+  <p class="section-subtitle">Informações em tempo real da aplicação</p>
+  <div class="status-grid">
+    <div class="status-card">
+      <div class="status-label">Aplicação</div>
+      <div class="status-value green"><span class="status-dot"></span>Online</div>
+    </div>
+    <div class="status-card">
+      <div class="status-label">Banco de Dados</div>
+      <div class="status-value <%= @db_connected ? 'green' : '' %>">
+        <% if @db_connected %>
+          <span class="status-dot"></span>Conectado
+        <% else %>
+          &#10005; Desconectado
+        <% end %>
+      </div>
+    </div>
+    <div class="status-card">
+      <div class="status-label">Ambiente</div>
+      <div class="status-value"><%= @environment.capitalize %></div>
+    </div>
+    <div class="status-card">
+      <div class="status-label">Uptime</div>
+      <div class="status-value"><%= @uptime %></div>
+    </div>
+    <div class="status-card">
+      <div class="status-label">Ruby</div>
+      <div class="status-value"><%= @ruby_version %></div>
+    </div>
+    <div class="status-card">
+      <div class="status-label">Rails</div>
+      <div class="status-value"><%= @rails_version %></div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- PIPELINE -->
+<section class="section" id="pipeline">
+  <h2 class="section-title">Pipeline CI/CD</h2>
+  <p class="section-subtitle">Fluxo automático a cada push na branch main</p>
+  <div class="pipeline">
+    <div class="pipeline-step active">
+      <span class="step-icon">&#128196;</span>
+      <div class="step-info">
+        <strong>Push</strong>
+        <span>git push main</span>
+      </div>
+    </div>
+    <span class="pipeline-arrow">&#8594;</span>
+    <div class="pipeline-step active">
+      <span class="step-icon">&#9989;</span>
+      <div class="step-info">
+        <strong>Testes</strong>
+        <span>RuboCop + Brakeman</span>
+      </div>
+    </div>
+    <span class="pipeline-arrow">&#8594;</span>
+    <div class="pipeline-step active">
+      <span class="step-icon">&#128640;</span>
+      <div class="step-info">
+        <strong>Deploy</strong>
+        <span>SSH + Docker</span>
+      </div>
+    </div>
+    <span class="pipeline-arrow">&#8594;</span>
+    <div class="pipeline-step active">
+      <span class="step-icon">&#127757;</span>
+      <div class="step-info">
+        <strong>Live</strong>
+        <span>EC2 atualizada</span>
+      </div>
+    </div>
+  </div>
+</section>
