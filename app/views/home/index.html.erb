@@ -1,79 +1,238 @@
-<!-- HERO -->
+<%# HERO %>
 <section class="hero">
-  <span class="hero-badge">&#9679; Live em produção</span>
+  <div class="hero-badge">
+    <span class="badge-dot"></span> Live em produção
+  </div>
   <h1>AWS Rails Cloud Deploy</h1>
-  <p>Aplicação Ruby on Rails rodando na AWS EC2 com Docker, Nginx e PostgreSQL</p>
+  <p class="hero-sub">
+    Do zero ao deploy — Ruby on Rails rodando na AWS EC2 com Docker, CI/CD e HTTPS.
+  </p>
   <div class="hero-buttons">
-    <a href="#stack" class="btn btn-primary">Ver Stack</a>
-    <a href="https://github.com/Dudainfinity/aws-rails-cloud-deploy" target="_blank" class="btn btn-outline">GitHub</a>
+    <a href="#timeline" class="btn btn-primary">&#128640; Ver o Projeto</a>
+    <a href="https://github.com/Dudainfinity/aws-rails-cloud-deploy" target="_blank" class="btn btn-ghost">&#128196; GitHub</a>
   </div>
 </section>
 
-<hr class="divider">
+<hr>
 
-<!-- STACK -->
-<section class="section" id="stack">
-  <h2 class="section-title">Stack de Tecnologias</h2>
-  <p class="section-subtitle">Ferramentas utilizadas nesse projeto</p>
-  <div class="cards-grid">
-    <div class="card">
-      <div class="card-icon">&#128142;</div>
+<%# TIMELINE %>
+<div class="section" id="timeline">
+  <div class="section-header">
+    <p class="section-label">&#128203; Passo a Passo</p>
+    <h2 class="section-title">Como o projeto foi construído</h2>
+    <p class="section-desc">Cada etapa desde a criação até o deploy em produção na AWS.</p>
+  </div>
+
+  <div class="timeline">
+
+    <div class="timeline-item">
+      <div class="timeline-dot dot-blue">1</div>
+      <div class="timeline-card">
+        <p class="timeline-step">Passo 01 &mdash; Fundação</p>
+        <h3>Criação da aplicação Rails</h3>
+        <p>
+          Aplicação gerada com <strong>Rails 8</strong> e <strong>Ruby 3.2.2</strong>,
+          configurada com PostgreSQL como banco de dados principal e Propshaft para gestão
+          de assets. Estrutura limpa com controller, views e rotas definidas desde o início.
+        </p>
+        <div class="tags">
+          <span class="tag tag-blue">Rails 8.1</span>
+          <span class="tag tag-blue">Ruby 3.2.2</span>
+          <span class="tag tag-green">PostgreSQL</span>
+          <span class="tag tag-purple">Propshaft</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot dot-teal">2</div>
+      <div class="timeline-card">
+        <p class="timeline-step">Passo 02 &mdash; Containerização</p>
+        <h3>Dockerfile multi-stage + Nginx</h3>
+        <p>
+          Imagem Docker otimizada com <strong>build multi-stage</strong>: estágio de build
+          compila gems e assets, estágio final copia apenas o necessário. Nginx e Puma
+          rodam no mesmo container &mdash; Nginx na porta 80 fazendo proxy para o Puma na porta 3000.
+          Assets servidos diretamente pelo Nginx com cache longo.
+        </p>
+        <div class="tags">
+          <span class="tag tag-blue">Docker multi-stage</span>
+          <span class="tag tag-teal">Nginx</span>
+          <span class="tag tag-purple">Puma</span>
+          <span class="tag tag-green">jemalloc</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot dot-green">3</div>
+      <div class="timeline-card">
+        <p class="timeline-step">Passo 03 &mdash; Orquestração</p>
+        <h3>Docker Compose com rede interna</h3>
+        <p>
+          <strong>docker-compose.yml</strong> com dois serviços em rede privada: banco
+          <code>postgres:16</code> e aplicação web. Variáveis sensíveis via
+          <code>.env.production</code>. Volume persistente para os dados do PostgreSQL.
+          Script <code>bin/start</code> que prepara o banco antes de subir o servidor.
+        </p>
+        <div class="tags">
+          <span class="tag tag-blue">docker compose</span>
+          <span class="tag tag-green">postgres:16</span>
+          <span class="tag tag-yellow">.env.production</span>
+          <span class="tag tag-teal">volume persistente</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot dot-yellow">4</div>
+      <div class="timeline-card">
+        <p class="timeline-step">Passo 04 &mdash; Infraestrutura</p>
+        <h3>Instância EC2 na AWS</h3>
+        <p>
+          Servidor Ubuntu na <strong>AWS EC2</strong> com Docker instalado.
+          Repositório clonado em <code>/var/www/aws-rails-cloud-deploy</code>.
+          Security Group configurado para liberar as portas <strong>22</strong> (SSH),
+          <strong>80</strong> (HTTP) e <strong>443</strong> (HTTPS).
+          Script <code>setup-ec2.sh</code> automatiza toda a preparação do servidor.
+        </p>
+        <div class="tags">
+          <span class="tag tag-yellow">AWS EC2</span>
+          <span class="tag tag-blue">Ubuntu 22.04</span>
+          <span class="tag tag-orange">Security Group</span>
+          <span class="tag tag-green">Docker</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot dot-purple">5</div>
+      <div class="timeline-card">
+        <p class="timeline-step">Passo 05 &mdash; Automação</p>
+        <h3>CI/CD com GitHub Actions</h3>
+        <p>
+          Pipeline completo em <code>.github/workflows/deploy.yml</code> com 4 etapas
+          em sequência: <strong>Lint</strong> (RuboCop), <strong>Security</strong>
+          (Brakeman + Bundler Audit), <strong>Testes</strong> (com banco real PostgreSQL)
+          e <strong>Deploy</strong> via SSH. Health check automático ao final confirma
+          que a aplicação subiu com HTTP 200.
+        </p>
+        <div class="tags">
+          <span class="tag tag-purple">GitHub Actions</span>
+          <span class="tag tag-blue">RuboCop</span>
+          <span class="tag tag-orange">Brakeman</span>
+          <span class="tag tag-green">Testes automatizados</span>
+          <span class="tag tag-teal">Health check</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot dot-orange">6</div>
+      <div class="timeline-card">
+        <p class="timeline-step">Passo 06 &mdash; Segurança</p>
+        <h3>HTTPS com Let's Encrypt</h3>
+        <p>
+          Certificado SSL gratuito via <strong>Let's Encrypt + Certbot</strong> usando
+          o domínio <code>sslip.io</code> &mdash; sem necessidade de comprar um domínio.
+          Nginx no host como proxy reverso terminando SSL, repassando para o container
+          Docker na porta 3000. Renovação automática via crontab. Rails configurado com
+          <code>force_ssl</code> e <code>assume_ssl</code>.
+        </p>
+        <div class="tags">
+          <span class="tag tag-green">Let's Encrypt</span>
+          <span class="tag tag-blue">Certbot</span>
+          <span class="tag tag-teal">sslip.io</span>
+          <span class="tag tag-orange">force_ssl</span>
+          <span class="tag tag-purple">auto-renovação</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<hr>
+
+<%# STACK %>
+<div class="section" id="stack">
+  <div class="section-header">
+    <p class="section-label">&#128296; Tecnologias</p>
+    <h2 class="section-title">Stack completa do projeto</h2>
+    <p class="section-desc">Todas as ferramentas utilizadas do desenvolvimento ao deploy.</p>
+  </div>
+
+  <div class="stack-grid">
+    <div class="stack-card">
+      <div class="stack-icon">&#128142;</div>
       <h3>Ruby on Rails</h3>
-      <p>Framework web full-stack para desenvolvimento rápido e produtivo</p>
-      <span class="card-version">Rails <%= @rails_version %> / Ruby <%= @ruby_version %></span>
+      <p>Framework web full-stack</p>
+      <span class="stack-version">Rails <%= @rails_version %> / Ruby <%= @ruby_version %></span>
     </div>
-    <div class="card">
-      <div class="card-icon">&#128024;</div>
+    <div class="stack-card">
+      <div class="stack-icon">&#128024;</div>
       <h3>Docker</h3>
-      <p>Containerização da aplicação com Dockerfile multi-stage otimizado</p>
-      <span class="card-version">docker compose</span>
+      <p>Containerização multi-stage</p>
+      <span class="stack-version">docker compose</span>
     </div>
-    <div class="card">
-      <div class="card-icon">&#128190;</div>
+    <div class="stack-card">
+      <div class="stack-icon">&#128190;</div>
       <h3>PostgreSQL</h3>
-      <p>Banco de dados relacional robusto e escalável</p>
-      <span class="card-version">postgres:16</span>
+      <p>Banco de dados relacional</p>
+      <span class="stack-version">postgres:16</span>
     </div>
-    <div class="card">
-      <div class="card-icon">&#9881;</div>
+    <div class="stack-card">
+      <div class="stack-icon">&#9881;</div>
       <h3>Nginx</h3>
-      <p>Reverse proxy de alta performance servindo os assets e o Puma</p>
-      <span class="card-version">reverse proxy</span>
+      <p>Reverse proxy + SSL termination</p>
+      <span class="stack-version">host + container</span>
     </div>
-    <div class="card">
-      <div class="card-icon">&#9729;</div>
+    <div class="stack-card">
+      <div class="stack-icon">&#9729;</div>
       <h3>AWS EC2</h3>
-      <p>Instância cloud na AWS para hospedar toda a infraestrutura</p>
-      <span class="card-version">Ubuntu 22.04</span>
+      <p>Servidor cloud Ubuntu</p>
+      <span class="stack-version">Ubuntu 22.04</span>
     </div>
-    <div class="card">
-      <div class="card-icon">&#128296;</div>
+    <div class="stack-card">
+      <div class="stack-icon">&#128296;</div>
       <h3>GitHub Actions</h3>
-      <p>CI/CD automatizado com deploy contínuo a cada push na main</p>
-      <span class="card-version">CI/CD</span>
+      <p>CI/CD com 4 etapas</p>
+      <span class="stack-version">lint → test → deploy</span>
+    </div>
+    <div class="stack-card">
+      <div class="stack-icon">&#128274;</div>
+      <h3>Let's Encrypt</h3>
+      <p>Certificado SSL gratuito</p>
+      <span class="stack-version">certbot + sslip.io</span>
+    </div>
+    <div class="stack-card">
+      <div class="stack-icon">&#128640;</div>
+      <h3>Puma</h3>
+      <p>Servidor de aplicação Rails</p>
+      <span class="stack-version">Puma 8.0</span>
     </div>
   </div>
-</section>
+</div>
 
-<hr class="divider">
+<hr>
 
-<!-- STATUS -->
-<section class="section" id="status">
-  <h2 class="section-title">Status do Servidor</h2>
-  <p class="section-subtitle">Informações em tempo real da aplicação</p>
+<%# STATUS %>
+<div class="section" id="status">
+  <div class="section-header">
+    <p class="section-label">&#128308; Monitoramento</p>
+    <h2 class="section-title">Status em tempo real</h2>
+    <p class="section-desc">Dados ao vivo desta instância da aplicação.</p>
+  </div>
+
   <div class="status-grid">
     <div class="status-card">
       <div class="status-label">Aplicação</div>
-      <div class="status-value green"><span class="status-dot"></span>Online</div>
+      <div class="status-value status-ok">&#9679; Online</div>
     </div>
     <div class="status-card">
       <div class="status-label">Banco de Dados</div>
-      <div class="status-value <%= @db_connected ? 'green' : '' %>">
-        <% if @db_connected %>
-          <span class="status-dot"></span>Conectado
-        <% else %>
-          &#10005; Desconectado
-        <% end %>
+      <div class="status-value <%= @db_connected ? 'status-ok' : 'status-warn' %>">
+        <%= @db_connected ? '&#9679; Conectado' : '&#9675; Desconectado' %>
       </div>
     </div>
     <div class="status-card">
@@ -93,45 +252,65 @@
       <div class="status-value"><%= @rails_version %></div>
     </div>
   </div>
-</section>
+</div>
 
-<hr class="divider">
+<hr>
 
-<!-- PIPELINE -->
-<section class="section" id="pipeline">
-  <h2 class="section-title">Pipeline CI/CD</h2>
-  <p class="section-subtitle">Fluxo automático a cada push na branch main</p>
+<%# PIPELINE %>
+<div class="section" id="pipeline">
+  <div class="section-header">
+    <p class="section-label">&#128257; CI/CD</p>
+    <h2 class="section-title">Pipeline de deploy automático</h2>
+    <p class="section-desc">Cada push na branch main dispara esse fluxo completo.</p>
+  </div>
+
   <div class="pipeline">
-    <div class="pipeline-step active">
-      <span class="step-icon">&#128196;</span>
-      <div class="step-info">
-        <strong>Push</strong>
-        <span>git push main</span>
+    <div class="pipe-step ok">
+      <span class="pipe-icon">&#128196;</span>
+      <div class="pipe-label">
+        <strong>git push</strong>
+        <span>branch main</span>
       </div>
     </div>
-    <span class="pipeline-arrow">&#8594;</span>
-    <div class="pipeline-step active">
-      <span class="step-icon">&#9989;</span>
-      <div class="step-info">
+    <span class="pipe-arrow">&#8594;</span>
+    <div class="pipe-step ok">
+      <span class="pipe-icon">&#128269;</span>
+      <div class="pipe-label">
+        <strong>Lint</strong>
+        <span>RuboCop</span>
+      </div>
+    </div>
+    <span class="pipe-arrow">&#8594;</span>
+    <div class="pipe-step ok">
+      <span class="pipe-icon">&#128737;</span>
+      <div class="pipe-label">
+        <strong>Security</strong>
+        <span>Brakeman</span>
+      </div>
+    </div>
+    <span class="pipe-arrow">&#8594;</span>
+    <div class="pipe-step ok">
+      <span class="pipe-icon">&#9989;</span>
+      <div class="pipe-label">
         <strong>Testes</strong>
-        <span>RuboCop + Brakeman</span>
+        <span>Rails + PostgreSQL</span>
       </div>
     </div>
-    <span class="pipeline-arrow">&#8594;</span>
-    <div class="pipeline-step active">
-      <span class="step-icon">&#128640;</span>
-      <div class="step-info">
+    <span class="pipe-arrow">&#8594;</span>
+    <div class="pipe-step run">
+      <span class="pipe-icon">&#128640;</span>
+      <div class="pipe-label">
         <strong>Deploy</strong>
         <span>SSH + Docker</span>
       </div>
     </div>
-    <span class="pipeline-arrow">&#8594;</span>
-    <div class="pipeline-step active">
-      <span class="step-icon">&#127757;</span>
-      <div class="step-info">
+    <span class="pipe-arrow">&#8594;</span>
+    <div class="pipe-step ok">
+      <span class="pipe-icon">&#127757;</span>
+      <div class="pipe-label">
         <strong>Live</strong>
-        <span>EC2 atualizada</span>
+        <span>Health check ✓</span>
       </div>
     </div>
   </div>
-</section>
+</div>
